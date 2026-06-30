@@ -5,7 +5,7 @@ import "testing"
 func TestRabbitPoop(t *testing.T) {
 	rabbit := &Rabbit{}
 
-	err := rabbit.Poop(false)
+	err := rabbit.Poop(true)
 	if err != nil {
 		t.Fatal(err)
 	}
