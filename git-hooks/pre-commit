@@ -10,10 +10,8 @@ if [[ -z "$STAGED_GO_FILES" ]]; then
 fi
 
 echo "Go files staged:"
-echo "$STAGED_GO_FILES"
+echo $STAGED_GO_FILES
 echo
-
-printf 'STAGED_GO_FILES=<%s>\n' "$STAGED_GO_FILES"
 
 echo "Start Go quality checks..."
 make checks
