@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # берем все .go файлы которые попадут в коммит
-STAGED_GO_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep ".go$")
+STAGED_GO_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep "\.go$")
 
 # если нет изменённых .go файлов, то скипаем проверку и выходим
 if [[ -z "$STAGED_GO_FILES" ]]; then
@@ -10,7 +10,7 @@ if [[ -z "$STAGED_GO_FILES" ]]; then
 fi
 
 echo "Go files staged:"
-echo $STAGED_GO_FILES
+echo "$STAGED_GO_FILES"
 echo
 
 echo "Start Go quality checks..."
