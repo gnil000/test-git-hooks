@@ -13,6 +13,8 @@ echo "Go files staged:"
 echo "$STAGED_GO_FILES"
 echo
 
+printf 'STAGED_GO_FILES=<%s>\n' "$STAGED_GO_FILES"
+
 echo "Start Go quality checks..."
 make checks
 

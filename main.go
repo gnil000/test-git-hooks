@@ -5,7 +5,7 @@ import "fmt"
 func main() {
 	rabbit := &Rabbit{}
 
-	_ = rabbit.Poop(false)
+	_ = rabbit.Poop(true)
 }
 
 type Rabbit struct {
