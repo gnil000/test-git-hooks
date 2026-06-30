@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# берем все .go файлы которые попадут в коммит
+STAGED_GO_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep ".go$")
+
+# если нет изменённых .go файлов, то скипаем проверку и выходим
+if [[ -z "$STAGED_GO_FILES" ]]; then
+  echo "No Go files staged, skipping Go checks."
+  exit 0
+fi
+
+echo "Go files staged:"
+echo "$GO_FILES"
+echo
+
+echo "Start Go quality checks..."
+make checks
+
+# если проверка качества завершилась с ошибкой
+if [ $? != 0 ]; then
+  echo "❌ Lint errors found! Please fix them before committing."
+  exit 1
+fi
+
+echo "✅ Go quality checks passed successfully!"
+exit 0

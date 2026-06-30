@@ -1,0 +1,45 @@
+#!/bin/bash
+
+PROTECTED_BRANCH="main"
+CURRENT_BRANCH=$(git symbolic-ref --short HEAD)
+
+if [ "$CURRENT_BRANCH" = "$PROTECTED_BRANCH" ]; then
+  echo "🚨 WARNING: You are pushing directly to '$PROTECTED_BRANCH'."
+  echo "Type 'PUSH IT TO MAIN' to confirm:"
+  read -r confirmation < /dev/tty
+
+  if [ "$confirmation" != "PUSH IT TO MAIN" ]; then
+    echo "❌ Push aborted."
+    exit 1
+  fi
+
+  echo "✅ Confirmation received. Proceeding with push..."
+fi
+
+# Если у ветки есть upstream — сравниваем с ним.
+# Если нет — сравниваем с точкой ответвления от origin/main.
+if git rev-parse --verify @{u} >/dev/null 2>&1; then
+    GO_FILES=$(git diff --name-only @{u}..HEAD | grep '\.go$')
+else
+    BASE=$(git merge-base HEAD origin/main)
+    GO_FILES=$(git diff --name-only "$BASE"..HEAD | grep '\.go$')
+fi
+
+
+# если нет .go файлов, то выходим
+if [[ -z "$GO_FILES" ]]; then
+    echo "No Go files changed, skipping tests."
+    exit 0
+fi
+
+echo "Running Go tests..."
+make test
+
+# если тесты завершились с ненулевым кодом, то запрещаем пуш
+if [ $? != 0 ]; then
+  echo "❌ Tests not passed! Please fix them before pushing."
+  exit 1
+fi
+
+echo "✅ Tests passed successfully!"
+exit 0
